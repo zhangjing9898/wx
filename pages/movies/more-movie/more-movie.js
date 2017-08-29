@@ -41,6 +41,16 @@ Page({
     wx.showNavigationBarLoading();
   },
 
+  onPullDownRefresh: function (event) {
+    var refreshUrl = this.data.requestUrl +
+      "?star=0&count=20";
+    this.data.movies = {};
+    this.data.isEmpty = true;
+    this.data.totalCount = 0;
+    util.http(refreshUrl, this.processDoubanData);
+    wx.showNavigationBarLoading();
+  },
+
   processDoubanData: function (moviesDouban){
     var moviesAll = [];
     for (var idx in moviesDouban.subjects) {
@@ -70,6 +80,7 @@ Page({
     });
     this.data.totalCount +=20;
     wx.hideNavigationBarLoading();
+    wx.stopPullDownRefresh();
   },
   
   /**

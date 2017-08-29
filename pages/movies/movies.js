@@ -9,7 +9,10 @@ Page({
   data: {
     inTheaters:{},
     comingSoon:{},
-    top250:{}
+    top250:{},
+    searchResult:{},
+    containerShow:true,
+    searchPanelShow:false
   },
 
   /**
@@ -17,7 +20,7 @@ Page({
    */
   onLoad: function (options) {
     var publicUrl =app.globalData.doubanBase;
-    var inTheatersUrl = publicUrl+"/v2/movie/in_theaters"+"?start=0&count=3";
+    var inTheatersUrl = publicUrl +"/v2/movie/in_theaters"+"?start=0&count=3";
     var ComingSoonUrl = publicUrl + "/v2/movie/coming_soon" + "?start=0&count=3";
     var top250Url = publicUrl + "/v2/movie/top250" + "?start=0&count=3";
 
@@ -33,7 +36,39 @@ Page({
     })
   },
 
-  getMovieListData:function(url,settedKey,categoryTitle){
+  onMovieTap:function(event){
+    console.log("onMovieTap!");
+    var movieId = event.currentTarget.dataset.movieid;
+    wx.navigateTo({
+      url: 'movie-detail/movie-detail?id='+movieId,
+    })
+  },
+
+  onCancelImgTap:function(event){
+    this.setData({
+      containerShow:true,
+      searchPanelShow:false,
+      searchResult:{},
+    })
+  },
+
+  onBindFocus:function(event){
+    this.setData({
+      containerShow:false,
+      searchPanelShow:true
+    })
+  },
+
+  onBindChange:function(event){
+    var text = event.detail.value;
+    console.log(text);
+    var searchUrl = app.globalData.doubanBase +"/v2/movie/search?q="+text;
+    // console.log(searchUrl);
+    wx.showNavigationBarLoading();
+    this.getMovieListData(searchUrl,"searchResult","");
+  },
+
+  getMovieListData: function (url, settedKey, categoryTitle) {
     var that = this;
     wx.request({
       url: url,
@@ -42,7 +77,7 @@ Page({
         "Content-Type": "application/xml"
       },
       success: function (res) {
-        that.processDoubanData(res.data,settedKey,categoryTitle);
+        that.processDoubanData(res.data, settedKey, categoryTitle);
       },
       fail: function (error) {
         console.log(error);
@@ -73,6 +108,7 @@ Page({
       movies:moviesAll
     };
     this.setData(readyData);
+    wx.hideNavigationBarLoading();
   },
 
   /**

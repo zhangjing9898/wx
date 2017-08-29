@@ -1,10 +1,11 @@
 @import "movie-list/movie-list-template.wxss";
+@import "movie-grid/movie-grid-template.wxss";
 .container {
   background-color: #f2f2f2;
 }
 
 .search {
-  background-color: #f2f2f2;
+   background-color: #f2f2f2; 
   height: 80rpx;
   width: 100%;
   display: flex;
