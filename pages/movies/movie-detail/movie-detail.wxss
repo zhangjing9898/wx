@@ -135,7 +135,7 @@
     margin-right: 40rpx;
     width: 170rpx;
     text-align:center;
-    white-space: normal;
+     white-space: normal; 
 }
 
 .cast-imgs{
